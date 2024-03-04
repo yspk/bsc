@@ -22,6 +22,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/ethereum/go-ethereum/eth/protocols/eth"
+	"github.com/ethereum/go-ethereum/rlp"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum"
@@ -770,4 +772,30 @@ func (p *rpcProgress) toSyncProgress() *ethereum.SyncProgress {
 		HealingTrienodes:    uint64(p.HealingTrienodes),
 		HealingBytecode:     uint64(p.HealingBytecode),
 	}
+}
+
+//Define
+
+func (ec *Client) ServiceContiguousBlockHeaderQuery(ctx context.Context, query *eth.GetBlockHeadersPacket) ([]rlp.RawValue, error) {
+	var result []rlp.RawValue
+	err := ec.c.CallContext(ctx, &result, "net_serviceContiguousBlockHeaderQuery", *query)
+	return result, err
+}
+
+func (ec *Client) ServiceGetBlockBodiesQuery(ctx context.Context, query *eth.GetBlockBodiesPacket) ([]rlp.RawValue, error) {
+	var result []rlp.RawValue
+	err := ec.c.CallContext(ctx, &result, "net_serviceGetBlockBodiesQuery", *query)
+	return result, err
+}
+
+type ValidatorInfo struct {
+	Number    uint64           `json:"Number"`
+	Validator []common.Address `json:"Validator"`
+}
+
+// NextValidator returns the contract code of the given account in the pending state.
+func (ec *Client) NextValidator(ctx context.Context) ([]*ValidatorInfo, error) {
+	var result []*ValidatorInfo
+	err := ec.c.CallContext(ctx, &result, "eth_nextValidators")
+	return result, err
 }
