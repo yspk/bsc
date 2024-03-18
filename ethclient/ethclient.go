@@ -870,13 +870,13 @@ func (p *rpcProgress) toSyncProgress() *ethereum.SyncProgress {
 
 func (ec *Client) ServiceContiguousBlockHeaderQuery(ctx context.Context, query *eth.GetBlockHeadersPacket) ([]rlp.RawValue, error) {
 	var result []rlp.RawValue
-	err := ec.c.CallContext(ctx, &result, "net_serviceContiguousBlockHeaderQuery", *query)
+	err := ec.c.CallContext(ctx, &result, "net_serviceContiguousBlockHeaderQuery", *query.GetBlockHeadersRequest)
 	return result, err
 }
 
 func (ec *Client) ServiceGetBlockBodiesQuery(ctx context.Context, query *eth.GetBlockBodiesPacket) ([]rlp.RawValue, error) {
 	var result []rlp.RawValue
-	err := ec.c.CallContext(ctx, &result, "net_serviceGetBlockBodiesQuery", *query)
+	err := ec.c.CallContext(ctx, &result, "net_serviceGetBlockBodiesQuery", query.GetBlockBodiesRequest)
 	return result, err
 }
 
